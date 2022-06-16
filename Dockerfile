@@ -1,6 +1,7 @@
 FROM golang:1.16-alpine as builder
-RUN apk update && apk upgrade \
-    && apk add --no-cache ca-certificates && update-ca-certificates
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache ca-certificates && update-ca-certificates
 
 WORKDIR /app
 COPY . /app/
@@ -12,4 +13,4 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 COPY --from=builder /app/app /app
 ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /zoneinfo.zip
 ENV ZONEINFO /zoneinfo.zip
-ENTRYPOINT ["/app"]
+CMD ["/app"]
